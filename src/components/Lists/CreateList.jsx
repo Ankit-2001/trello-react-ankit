@@ -12,7 +12,8 @@ function CreateList({id,addNewList}) {
 
 
 
-  const handleSubmit = () => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
     if (inputValue) {
       createNewList(id, inputValue)
         .then((response) => addNewList([response.data]))
@@ -27,7 +28,6 @@ function CreateList({id,addNewList}) {
         });
       setInputValue(""); 
     }
-    setFormVisibility((prev) => !prev);
   };
 
   const handleInputChange = (e) => {
@@ -47,7 +47,7 @@ function CreateList({id,addNewList}) {
       </Button>
       {formVisibility && (
         <form onSubmit={handleSubmit}>
-          <FormControl display="block">
+          <Box display="block">
             <Input
               _hover={{
                 border: "1px solid black",
@@ -70,7 +70,7 @@ function CreateList({id,addNewList}) {
                 Cancel
               </Button>
             </Flex>
-          </FormControl>
+          </Box>
         </form>
       )}
     </Box>

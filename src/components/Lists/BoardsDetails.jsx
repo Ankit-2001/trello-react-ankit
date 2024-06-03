@@ -51,7 +51,7 @@ function BoardsDetails() {
             pt="1rem"
           >
             {listData?.map((list) => {
-              // console.log(list);
+              console.log(list.id);
               return (
                 <ListContainer
                   key={list.id}

@@ -31,10 +31,7 @@ export function createNewList(boardId, name) {
   const url = `https://api.trello.com/1/boards/${boardId}/lists?name=${name}&key=${apiKey}&token=${token}`;
   return axios
     .post(url)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((err) => err);
+    
 }
 
 export function getCardData(listID) {
