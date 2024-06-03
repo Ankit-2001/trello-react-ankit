@@ -3,13 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import CheckitemsInChecklist from "../Checkitems/CheckitemsInChecklist";
-import { deleteChecklist } from "../../Api";
-import { useContext } from "react";
+import { deleteChecklist, getCheckitems } from "../../Api";
+import { useContext,useState,useEffect } from "react";
 import CheckItemsContext from "../CheckitemContext";
 
 function ChecklistData({
   name,
-  checkItems,
   id,
   idCard,
   deleteCurrentChecklist,
@@ -17,14 +16,56 @@ function ChecklistData({
   const { updateCheckedCheckitems, updateTotalCheckitems } =
     useContext(CheckItemsContext);
 
+  const [checkitems, setCheckitems] = useState([]);
+
+   const handleCheckedChange = (checkitemId) => {
+     const updatedCheckitems = checkitems.map((checkitemData) => {
+       if (checkitemData.id === checkitemId) {
+         if (checkitemData.state === "complete") {
+           updateCheckedCheckitems(idCard, checkitemData.state);
+           checkitemData.state = "incomplete";
+         } else {
+           updateCheckedCheckitems(idCard, checkitemData.state);
+           checkitemData.state = "complete";
+         }
+       }
+       return checkitemData;
+     });
+     setCheckitems(updatedCheckitems);
+   };
+
+   useEffect(() => {
+     getCheckitems(id).then((data) => {
+       console.log(data);
+       setCheckitems(data);
+     });
+   }, []);
+
+   const addNewCheckitems = (checkitem) => {
+     setCheckitems([...checkitems, checkitem]);
+     updateTotalCheckitems(idCard, "add");
+   };
+
+   const deleteCurrentCheckitem = (checkitemId) => {
+     const remainingCheckitems = checkitems.filter((data) => {
+       if (data.id != checkitemId) {
+         return true;
+       } else {
+         if (data.state === "complete") {
+           updateCheckedCheckitems(idCard, "complete");
+         }
+       }
+     });
+     setCheckitems(remainingCheckitems);
+   };
 
   function handleDelete() {
-    console.log(checkItems);
-    let completedItems = checkItems.filter(
+    console.log(checkitems);
+    let completedItems = checkitems.filter(
       (data) => data.state == "complete"
     ).length;
     updateCheckedCheckitems(idCard, "complete", completedItems);
-    updateTotalCheckitems(idCard, "delete", checkItems.length);
+    updateTotalCheckitems(idCard, "delete", checkitems.length);
     deleteChecklist(idCard, id).then((data) => {
       console.log(`${id} deleted successfully`);
       deleteCurrentChecklist(data);
@@ -40,7 +81,14 @@ function ChecklistData({
           <FontAwesomeIcon icon={faTrash} />
         </Button>
       </Flex>
-      <CheckitemsInChecklist id={id} idCard={idCard} />
+      <CheckitemsInChecklist
+        id={id}
+        idCard={idCard}
+        handleCheckedChange={handleCheckedChange}
+        addNewCheckitems={addNewCheckitems}
+        deleteCurrentCheckitem={deleteCurrentCheckitem}
+        checkitems={checkitems}
+      />
     </Box>
   );
 }
