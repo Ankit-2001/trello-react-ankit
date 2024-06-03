@@ -1,6 +1,3 @@
-import { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import {
   Box,
   Flex,
@@ -15,10 +12,14 @@ import {
   PopoverCloseButton,
   Portal,
 } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 
 import CardDetails from "../Cards/CardDetails";
 import CreateCard from "../Cards/CreateCard";
 import { getCardData, deleteList } from "../../Api";
+import CheckItemsContext from "../CheckitemContext";
 
 function ListContainer({ name, id, deleteCurrentListData }) {
   const [cardsData, setCardsData] = useState([]);
@@ -33,7 +34,40 @@ function ListContainer({ name, id, deleteCurrentListData }) {
     setCardsData([...cardsData, newCard]);
   };
 
-  
+  const updateCheckedCheckitems = (cardId, state,count =1) => {
+    const copyCardData = cardsData.map((cardData) => {
+      if (cardData.id === cardId) {
+        const updatedCardsData = { ...cardData };
+        if (state === "complete") {
+          updatedCardsData.badges.checkItemsChecked -= count;
+        } else {
+          updatedCardsData.badges.checkItemsChecked += count;
+        }
+        return updatedCardsData;
+      } else {
+        return cardData;
+      }
+    });
+
+    setCardsData(copyCardData);
+  };
+   const updateTotalCheckitems = (cardId, state,count = 1) => {
+     const copyCardData = cardsData.map((cardData) => {
+       if (cardData.id === cardId) {
+         const updatedCardsData = { ...cardData };
+         if (state === "delete") {
+           updatedCardsData.badges.checkItems -= count;
+         } else {
+           updatedCardsData.badges.checkItems += count;
+         }
+         return updatedCardsData;
+       } else {
+         return cardData;
+       }
+     });
+
+     setCardsData(copyCardData);
+   };
 
   const deleteCurrentCardData = (cardId) => {
     const remainingCards = cardsData.filter((data) => {
@@ -57,18 +91,13 @@ function ListContainer({ name, id, deleteCurrentListData }) {
     deleteList(id).then(() => {
       console.log("List deleted successfully.....");
       deleteCurrentListData(id);
+      
     });
   }
 
   return (
-    <Box
-      minW="12rem"
-      bg="gray"
-      h="fit-content"
-      p="2"
-      borderRadius="md"
-    >
-      <Flex mb="1rem" justifyContent="space-between" alignItems="center" px= "2">
+    <Box minW="12rem" bg="gray" h="fit-content" p="2" borderRadius="md">
+      <Flex mb="1rem" justifyContent="space-between" alignItems="center" px="2">
         <Heading as="h3" fontSize="1rem" color="white">
           {name}
         </Heading>
@@ -98,7 +127,11 @@ function ListContainer({ name, id, deleteCurrentListData }) {
           </Portal>
         </Popover>
       </Flex>
-      {allCards}
+      <CheckItemsContext.Provider
+        value={{ updateCheckedCheckitems, updateTotalCheckitems }}
+      >
+        {allCards}
+      </CheckItemsContext.Provider>
       <CreateCard key={id} id={id} addNewCard={addNewCard} />
     </Box>
   );

@@ -1,19 +1,30 @@
-import { useState, useEffect } from "react";
-import { Button } from "@chakra-ui/react";
-import { getAllBoards } from "../../Api";
+import { useEffect, useRef, useState } from "react";
+import { Button, useToast } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
-function BoardContainer({ boards, addNewBoards }) {
-  //   console.log(apiKey);
-  //   console.log(token);
+import { getAllBoards } from "../../Api";
+import CreateBoard from "./CreateBoard";
+
+function BoardContainer() {
+  const toast = useToast();
+  const toastIdRef = useRef();
+  const [boards, setBoards] = useState([]);
+  const addNewBoards = (newBoard) => {
+    setBoards([...boards, ...newBoard]);
+  };
 
   useEffect(() => {
     getAllBoards()
-      .then((response) => {
-        addNewBoards(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
+      .then((response) => setBoards(response.data))
+      .catch((err) => {
+        console.log(err);
+        toastIdRef.current = toast({
+          duration: 1000,
+          isClosable: true,
+          position: "top-right",
+          status: "error",
+          description: `${err.message} :could not ${err.config.method} ${err.config.url}`,
+        });
       });
   }, []);
 
@@ -29,29 +40,34 @@ function BoardContainer({ boards, addNewBoards }) {
     justifyContent: "flex-start",
     p: "2",
   };
-
-  const allBoards = boards.map((board) => {
-    return (
-      <Link to={`/boards/${board.id}`} key={board.id}>
-        <Button
-          key={board.id}
-          backgroundColor={board.prefs?.backgroundColor}
-          backgroundImage={`url(${board.prefs?.backgroundImage})`}
-          backgroundSize="cover"
-          sx={buttonStyles}
-          _hover={{
-            backgroundColor: `${board.prefs?.backgroundColor}`,
-            backgroundImage: `url(${board.prefs?.backgroundImage}) `,
-            color: "white ",
-          }}
-        >
-          <h3>{board.name}</h3>
-        </Button>
-      </Link>
-    );
-  });
-
-  return <>{allBoards}</>;
+  console.log("boards", boards);
+  return (
+    <>
+      {boards.length
+        ? boards?.map((board) => {
+            return (
+              <Link to={`/boards/${board.id}`} key={board.id}>
+                <Button
+                  key={board.id}
+                  backgroundColor={board.prefs?.backgroundColor}
+                  backgroundImage={`url(${board.prefs?.backgroundImage})`}
+                  backgroundSize="cover"
+                  sx={buttonStyles}
+                  _hover={{
+                    backgroundColor: `${board.prefs?.backgroundColor}`,
+                    backgroundImage: `url(${board.prefs?.backgroundImage}) `,
+                    color: "white ",
+                  }}
+                >
+                  <h3>{board.name}</h3>
+                </Button>
+              </Link>
+            );
+          })
+        : null}
+      <CreateBoard addNewBoards={addNewBoards} />
+    </>
+  );
 }
 
 export default BoardContainer;

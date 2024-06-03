@@ -1,8 +1,4 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import {
-  Box,
-  Flex,
   Text,
   Button,
   Popover,
@@ -13,15 +9,16 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
 } from "@chakra-ui/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
+
 import { deleteCard } from "../../Api";
 import ChecklistInCard from "../Checklist/ChecklistInCard";
 
-
-function CardDetails({ name, id, deleteCurrentCardData }) {
+function CardDetails({ name, id, badges, deleteCurrentCardData }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   function deleteCurrentCard() {
     deleteCard(id).then(() => {
@@ -42,9 +39,17 @@ function CardDetails({ name, id, deleteCurrentCardData }) {
         className="card-details-btn"
       >
         <Text>{name}</Text>
+        {badges.checkItems ? (
+          <Text ml="0.5rem">
+            {badges.checkItemsChecked} / {badges.checkItems}
+          </Text>
+        ) : (
+          <></>
+        )}
         <Popover placement="right">
           <PopoverTrigger>
             <Button
+              as="p"
               onClick={(e) => {
                 e.stopPropagation();
               }}
@@ -60,13 +65,14 @@ function CardDetails({ name, id, deleteCurrentCardData }) {
           </PopoverTrigger>
           <PopoverContent w="fit-content">
             <Button
+              as="p"
               bg="red"
               color="white"
               _hover={{ bg: "red" }}
               onClick={(e) => {
                 e.stopPropagation();
-                deleteCurrentCard()}
-              }
+                deleteCurrentCard();
+              }}
             >
               Archieve the card
             </Button>

@@ -8,10 +8,8 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverBody,
-  PopoverFooter,
   PopoverArrow,
   PopoverCloseButton,
-  PopoverAnchor,
   Input,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
@@ -20,8 +18,6 @@ import ChecklistData from "./ChecklistData";
 import { createChecklist, getChecklists } from "../../Api";
 
 function ChecklistInCard({ cardId }) {
-  // console.log(cardId);
-
   const [checkLists, setCheckLists] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
@@ -32,6 +28,7 @@ function ChecklistInCard({ cardId }) {
   }, []);
 
   const deleteCurrentChecklist = (checklistsData) => {
+    // console.log(checklistsData)
     setCheckLists(checklistsData);
   };
 
@@ -55,7 +52,8 @@ function ChecklistInCard({ cardId }) {
     if (inputValue) {
       createChecklist(cardId, inputValue).then((data) => {
         console.log("Checklist created successfully...");
-        setCheckLists([...checkLists, data]);
+        console.log(data);
+        setCheckLists([...checkLists,data]);
         setInputValue("");
       });
     }

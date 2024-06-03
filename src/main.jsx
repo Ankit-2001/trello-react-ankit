@@ -13,10 +13,11 @@ import BoardsDetails from "./components/Lists/BoardsDetails.jsx";
 import App from "./App.jsx";
 
 import "./index.css";
+import ErrorPage from "./components/ErrorPage.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />}>
+    <Route path="/" element={<App />} errorElement={<ErrorPage />}>
       <Route index element={<Boards />} />
       <Route path="/boards/:id" element={<BoardsDetails />} />
     </Route>

@@ -1,15 +1,30 @@
-import React, { useState, useRef } from "react";
-import { Box, Button, FormControl, Input, Flex } from "@chakra-ui/react";
-import { createNewList } from "../../Api";
+import React, { useRef, useState} from "react";
+import { Box, Button, FormControl, Input, Flex, useToast } from "@chakra-ui/react";
 
+import { createNewList } from "../../Api";
 
 function CreateList({id,addNewList}) {
   const [formVisibility, setFormVisibility] = useState(false);
   const [inputValue, setInputValue] = useState(""); 
 
+  const toast = useToast();
+  const toastIdRef = useRef();
+
+
+
   const handleSubmit = () => {
     if (inputValue) {
-      createNewList(id, inputValue).then((data) => addNewList([data]));
+      createNewList(id, inputValue)
+        .then((response) => addNewList([response.data]))
+        .catch((err) => {
+          toastIdRef.current = toast({
+            duration: 1000,
+            isClosable: true,
+            position: "top-right",
+            status: "error",
+            description: `${err.message} :could not ${err.config.method} ${err.config.url}`,
+          });
+        });
       setInputValue(""); 
     }
     setFormVisibility((prev) => !prev);

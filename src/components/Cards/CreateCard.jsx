@@ -1,18 +1,37 @@
-import React, { useState } from "react";
-import { Box, Button, FormControl, Input, Flex } from "@chakra-ui/react";
+import React, { useRef, useState } from "react";
+import {
+  Box,
+  Button,
+  FormControl,
+  Input,
+  Flex,
+  useToast,
+} from "@chakra-ui/react";
 
 import { createNewCard } from "../../Api";
 
 function CreateCard({ id, addNewCard }) {
   const [formVisibility, setFormVisibility] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const toast = useToast();
+  const toastIdRef = useRef();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     if (inputValue) {
-      createNewCard(id, inputValue).then((data) => {
-        addNewCard(data);
-      });
+      createNewCard(id, inputValue)
+        .then((data) => {
+          addNewCard(data);
+        })
+        .catch((err) => {
+          toastIdRef.current = toast({
+            duration: 1000,
+            isClosable: true,
+            position: "top-right",
+            status: "error",
+            description: `${err.message} :could not ${err.config.method} ${err.config.url}`,
+          });
+        });
       setInputValue("");
     }
   };
@@ -25,8 +44,8 @@ function CreateCard({ id, addNewCard }) {
     <Box h="max-content" w="11rem" bg="gray.300" borderRadius="md" mt="0.5rem">
       <Button
         bg="blue.300"
-        color= "white"
-        _hover = {{bg:"blue.300"}}
+        color="white"
+        _hover={{ bg: "blue.300" }}
         display={formVisibility ? "none" : "block"}
         w="full"
         onClick={() => {
@@ -39,7 +58,7 @@ function CreateCard({ id, addNewCard }) {
         <form onSubmit={handleSubmit}>
           <FormControl display="block" p="2">
             <Input
-               autoFocus
+              autoFocus
               _hover={{
                 border: "1px solid black",
               }}

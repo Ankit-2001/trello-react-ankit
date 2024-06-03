@@ -1,15 +1,8 @@
-import { useState } from "react";
 import { Box, Divider, Flex, Heading, Text } from "@chakra-ui/react";
 
-
 import BoardContainer from "./BoardContainer";
-import CreateBoard from "./CreateBoard";
 
 function Boards() {
-  const [boards, setBoards] = useState([]);
-  const addNewBoards = (newBoard) => {
-    setBoards([...boards, ...newBoard]);
-  };
   return (
     <Box mt="4rem" mx="auto" w="55vw">
       <Box>
@@ -21,8 +14,7 @@ function Boards() {
       <Box mt="2rem">
         <Text mb="1rem">Your boards</Text>
         <Flex wrap="wrap" gap="2rem">
-          <BoardContainer boards={boards} addNewBoards={addNewBoards} />
-          <CreateBoard addNewBoards={addNewBoards} />
+          <BoardContainer />
         </Flex>
       </Box>
     </Box>

@@ -7,12 +7,14 @@ const permission = "public";
 
 export function getAllBoards() {
   const url = `https://api.trello.com/1/members/me/boards?key=${apiKey}&token=${token}`;
-  return axios.get(url);
+  return axios.get(url)
+          
 }
 
 export function createNewBoard(boardName) {
   const url = `https://api.trello.com/1/boards/?name=${boardName}&prefs_permissionLevel=${permission}&defaultLists=false&key=${apiKey}&token=${token}`;
-  return axios.post(url);
+  return axios
+    .post(url)
 }
 
 export function getAllLists(boardID) {
@@ -22,7 +24,7 @@ export function getAllLists(boardID) {
     .then((response) => {
       return response.data;
     })
-    .catch((err) => err);
+    .catch((err) => {throw new Error(err)});
 }
 
 export function createNewList(boardId, name) {
@@ -42,9 +44,9 @@ export function getCardData(listID) {
     headers: {
       Accept: "application/json",
     },
-  }).then((response) => {
-    return response.data;
-  });
+  })
+    .then((response) => response.data)
+    .catch((err) => err);
 }
 
 export function createNewCard(listId, name) {
@@ -61,53 +63,68 @@ export function deleteList(listId) {
   const url = `https://api.trello.com/1/lists/${listId}/closed?value=true&key=${apiKey}&token=${token}`;
   return axios(url, {
     method: "PUT",
-  });
+  })
+    .then((response) => response.data)
+    .catch((err) => err);
 }
 
 export function deleteCard(cardId) {
   const url = `https://api.trello.com/1/cards/${cardId}?key=${apiKey}&token=${token}`;
   return axios(url, {
     method: "DELETE",
-  });
+  })
+    .then((response) => response.data)
+    .catch((err) => err);
 }
 
 export function getChecklists(cardId) {
   const url = `https://api.trello.com/1/cards/${cardId}/checklists?key=${apiKey}&token=${token}`;
 
-  return axios.get(url)
-          .then((response) => response.data)
+  return axios
+    .get(url)
+    .then((response) => response.data)
+    .catch((err) => err);
 }
 
 export function createChecklist(cardId,name) {
   const url = `https://api.trello.com/1/cards/${cardId}/checklists?name=${name}&key=${apiKey}&token=${token}`;
   return axios.post(url)
-            .then((response) => response.data);
+            .then((response) => response.data)
+          .catch((err) => err);
 }
 
 export function deleteChecklist(cardId,checklistId){
   const url = `https://api.trello.com/1/cards/${cardId}/checklists/${checklistId}?key=${apiKey}&token=${token}`;
 
-  return axios.delete(url)
-            .then((response) => response.data)
+  return axios
+    .delete(url)
+    .then((response) => response.data)
+    .catch((err) => err);
 }
 
 export function getCheckitems(checklistId){
   const url = `https://api.trello.com/1/checklists/${checklistId}/checkItems?key=${apiKey}&token=${token}`;
 
-  return axios.get(url)
-            .then((response) => response.data);
+  return axios
+    .get(url)
+    .then((response) => response.data)
+    .catch((err) => err);
 }
 
 export function createNewCheckitem(checklistId,name){
   const url = `https://api.trello.com/1/checklists/${checklistId}/checkItems?name=${name}&key=${apiKey}&token=${token}`;
-  return axios.post(url)
-            .then((response) => response.data)
+  return axios
+    .post(url)
+    .then((response) => response.data)
+    .catch((err) => err);
 }
 
 export function deleteCheckitem(checklistId,checkitemId){
   const url = `https://api.trello.com/1/checklists/${checklistId}/checkItems/${checkitemId}?key=${apiKey}&token=${token}`;
-  return axios.delete(url)
-            .then((response) => response.data);
+  return axios
+    .delete(url)
+    .then((response) => response.data)
+    .catch((err) => err);
 }
 
 
