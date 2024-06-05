@@ -52,7 +52,7 @@ function ChecklistInCard({ cardId }) {
     if (inputValue) {
       createChecklist(cardId, inputValue).then((data) => {
         console.log("Checklist created successfully...");
-        console.log(data);
+        // console.log(data);
         setCheckLists([...checkLists,data]);
         setInputValue("");
       });

@@ -1,9 +1,9 @@
 import { Button, Checkbox, Flex, Spacer, Text } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { useContext } from "react";
 
 import { deleteCheckitem, updateCheckitem } from "../../Api";
-import { useContext } from "react";
 import CheckItemsContext from "../CheckitemContext";
 
 function CheckitemsData({

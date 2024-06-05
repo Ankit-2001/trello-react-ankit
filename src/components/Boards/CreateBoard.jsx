@@ -54,13 +54,9 @@ export default function CreateBoard({ addNewBoards }) {
       <Button onClick={onOpen} bg="blue.200" h="6rem" w="12rem">
         Create new board
       </Button>
-      {/* <Button ml={4} ref={finalRef}>
-        I'll receive focus on close
-      </Button> */}
-
+    
       <Modal
         initialFocusRef={initialRef}
-        // finalFocusRef={finalRef}
         isOpen={isOpen}
         onClose={onClose}
       >
@@ -76,11 +72,6 @@ export default function CreateBoard({ addNewBoards }) {
                   value={inputValue}
                   onChange={handleInputChange}
                 />
-
-                {/* <FormControl mt={4}>
-              <FormLabel>Last name</FormLabel>
-              <Input placeholder="Last name" />
-            </FormControl> */}
               </ModalBody>
 
               <ModalFooter>

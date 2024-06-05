@@ -40,7 +40,7 @@ function BoardContainer() {
     justifyContent: "flex-start",
     p: "2",
   };
-  console.log("boards", boards);
+  // console.log("boards", boards);
   return (
     <>
       {boards.length

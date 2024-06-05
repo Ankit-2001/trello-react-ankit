@@ -27,11 +27,11 @@ function BoardsDetails() {
   useEffect(() => {
     getAllLists(id)
       .then((data) => {
-        console.log("inside then");
+        // console.log("inside then");
         setListData(data);
       })
       .catch((err) => {
-        console.log("inside the catch");
+        // console.log("inside the catch");
         setIsError(true);
       });
   }, []);
