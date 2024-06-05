@@ -50,10 +50,7 @@ export function createNewCard(listId, name) {
   const url = `https://api.trello.com/1/cards?name=${name}&idList=${listId}&key=${apiKey}&token=${token}`;
   return axios
     .post(url)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((err) => err);
+    
 }
 
 export function deleteList(listId) {
@@ -61,8 +58,6 @@ export function deleteList(listId) {
   return axios(url, {
     method: "PUT",
   })
-    .then((response) => response.data)
-    .catch((err) => err);
 }
 
 export function deleteCard(cardId) {
@@ -70,8 +65,7 @@ export function deleteCard(cardId) {
   return axios(url, {
     method: "DELETE",
   })
-    .then((response) => response.data)
-    .catch((err) => err);
+  
 }
 
 export function getChecklists(cardId) {
@@ -79,15 +73,13 @@ export function getChecklists(cardId) {
 
   return axios
     .get(url)
-    .then((response) => response.data)
-    .catch((err) => err);
+    
 }
 
 export function createChecklist(cardId,name) {
   const url = `https://api.trello.com/1/cards/${cardId}/checklists?name=${name}&key=${apiKey}&token=${token}`;
   return axios.post(url)
-            .then((response) => response.data)
-          .catch((err) => err);
+    
 }
 
 export function deleteChecklist(cardId,checklistId){
@@ -95,33 +87,21 @@ export function deleteChecklist(cardId,checklistId){
 
   return axios
     .delete(url)
-    .then((response) => response.data)
-    .catch((err) => err);
-}
-
-export function getCheckitems(checklistId){
-  const url = `https://api.trello.com/1/checklists/${checklistId}/checkItems?key=${apiKey}&token=${token}`;
-
-  return axios
-    .get(url)
-    .then((response) => response.data)
-    .catch((err) => err);
+    
 }
 
 export function createNewCheckitem(checklistId,name){
   const url = `https://api.trello.com/1/checklists/${checklistId}/checkItems?name=${name}&key=${apiKey}&token=${token}`;
   return axios
     .post(url)
-    .then((response) => response.data)
-    .catch((err) => err);
+    
 }
 
 export function deleteCheckitem(checklistId,checkitemId){
   const url = `https://api.trello.com/1/checklists/${checklistId}/checkItems/${checkitemId}?key=${apiKey}&token=${token}`;
   return axios
     .delete(url)
-    .then((response) => response.data)
-    .catch((err) => err);
+    
 }
 
 

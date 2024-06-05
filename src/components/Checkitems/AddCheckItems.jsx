@@ -1,30 +1,20 @@
-import { useContext, useState } from "react";
-import { Box, Button, FormControl, Input, Flex } from "@chakra-ui/react";
+import { useState } from "react";
+import { Box, Button } from "@chakra-ui/react";
 
-import { createNewCheckitem } from "../../Api";
-import CheckItemsContext from "../CheckitemContext";
+import Form from "../../Form";
 
-function AddCheckitems({ id, addNewCheckitems,cardId }) {
-
-  const {updateTotalCheckitems} = useContext(CheckItemsContext)
+function AddCheckitems({ id, additemToChecklist }) {
   const [formVisibility, setFormVisibility] = useState(false);
-  const [inputValue, setInputValue] = useState("");
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  //adding checkitems to checklist
+  const handleSubmitForm = (inputValue) => {
     if (inputValue) {
-      console.log(id);
-      createNewCheckitem(id, inputValue).then((data) => {
-        console.log("Checkitem created successfully...");
-        addNewCheckitems(data);
-      });
-      setInputValue("");
-      updateTotalCheckitems( cardId,"add")
+      additemToChecklist(id, inputValue);
     }
   };
 
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
+  const handleFormVisibility = () => {
+    setFormVisibility((prev) => !prev);
   };
 
   return (
@@ -39,33 +29,10 @@ function AddCheckitems({ id, addNewCheckitems,cardId }) {
         Add an item
       </Button>
       {formVisibility && (
-        <form onSubmit={handleSubmit}>
-          <FormControl display="block">
-            <Input
-              _hover={{
-                border: "1px solid black",
-              }}
-              w="13rem"
-              border="1px solid black"
-              mb="0.5rem"
-              placeholder="Enter checkitems"
-              value={inputValue}
-              onChange={handleInputChange}
-            />
-            <Flex gap="1rem">
-              <Button type="submit">Add</Button>
-              <Button
-                id="close"
-                type="button"
-                onClick={() => {
-                  setFormVisibility((prev) => !prev);
-                }}
-              >
-                X
-              </Button>
-            </Flex>
-          </FormControl>
-        </form>
+        <Form
+          handleSubmitForm={handleSubmitForm}
+          handleFormVisibility={handleFormVisibility}
+        />
       )}
     </Box>
   );

@@ -75,11 +75,11 @@ export default function CreateBoard({ addNewBoards }) {
               </ModalBody>
 
               <ModalFooter>
-                <Button colorScheme="blue" type="submit" mr={3}>
-                  Create
-                </Button>
-                <Button onClick={onClose} colorScheme="blue">
+                <Button colorScheme="red" type="submit" mr={3}>
                   Cancel
+                </Button>
+                <Button onClick={onClose} colorScheme="green">
+                  Create
                 </Button>
               </ModalFooter>
             </FormControl>

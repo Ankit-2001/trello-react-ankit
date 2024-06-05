@@ -11,67 +11,45 @@ import {
   PopoverArrow,
   PopoverCloseButton,
   Portal,
+  useToast,
 } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 
 import CardDetails from "../Cards/CardDetails";
 import CreateCard from "../Cards/CreateCard";
 import { getCardData, deleteList } from "../../Api";
-import CheckItemsContext from "../CheckitemContext";
+
 
 function ListContainer({ name, id, deleteCurrentListData }) {
   const [cardsData, setCardsData] = useState([]);
+  const toast = useToast();
+  const toastIdRef = useRef();
 
   useEffect(() => {
-    getCardData(id).then((card) => {
-      setCardsData(card);
-    });
+    getCardData(id)
+      .then((card) => {
+        setCardsData(card);
+      })
+      .catch((err) => {
+        toastIdRef.current = toast({
+          duration: 1000,
+          isClosable: true,
+          position: "top-right",
+          status: "error",
+          description: `${err.message} :could not ${err.config.method} ${err.config.url}`,
+        });
+      });
   }, []);
 
   const addNewCard = (newCard) => {
     setCardsData([...cardsData, newCard]);
   };
 
-  const updateCheckedCheckitems = (cardId, state,count =1) => {
-    const copyCardData = cardsData.map((cardData) => {
-      if (cardData.id === cardId) {
-        const updatedCardsData = { ...cardData };
-        if (state === "complete") {
-          updatedCardsData.badges.checkItemsChecked -= count;
-        } else {
-          updatedCardsData.badges.checkItemsChecked += count;
-        }
-        return updatedCardsData;
-      } else {
-        return cardData;
-      }
-    });
-
-    setCardsData(copyCardData);
-  };
-   const updateTotalCheckitems = (cardId, state,count = 1) => {
-     const copyCardData = cardsData.map((cardData) => {
-       if (cardData.id === cardId) {
-         const updatedCardsData = { ...cardData };
-         if (state === "delete") {
-           updatedCardsData.badges.checkItems -= count;
-         } else {
-           updatedCardsData.badges.checkItems += count;
-         }
-         return updatedCardsData;
-       } else {
-         return cardData;
-       }
-     });
-
-     setCardsData(copyCardData);
-   };
-
   const deleteCurrentCardData = (cardId) => {
     const remainingCards = cardsData.filter((data) => {
-      if (data.id != cardId) {
+      if (data.id !== cardId) {
         return true;
       }
     });
@@ -88,11 +66,20 @@ function ListContainer({ name, id, deleteCurrentListData }) {
   ));
 
   function deleteCurrentList() {
-    deleteList(id).then(() => {
-      console.log("List deleted successfully.....");
-      deleteCurrentListData(id);
-      
-    });
+    deleteList(id)
+      .then(() => {
+        console.log("List deleted successfully.....");
+        deleteCurrentListData(id);
+      })
+      .catch((err) => {
+        toastIdRef.current = toast({
+          duration: 1000,
+          isClosable: true,
+          position: "top-right",
+          status: "error",
+          description: `${err.message} :could not ${err.config.method} ${err.config.url}`,
+        });
+      });
   }
 
   return (
@@ -127,11 +114,9 @@ function ListContainer({ name, id, deleteCurrentListData }) {
           </Portal>
         </Popover>
       </Flex>
-      <CheckItemsContext.Provider
-        value={{ updateCheckedCheckitems, updateTotalCheckitems }}
-      >
-        {allCards}
-      </CheckItemsContext.Provider>
+
+      {allCards}
+
       <CreateCard key={id} id={id} addNewCard={addNewCard} />
     </Box>
   );

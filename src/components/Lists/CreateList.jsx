@@ -1,19 +1,19 @@
-import React, { useRef, useState} from "react";
-import { Box, Button, FormControl, Input, Flex, useToast } from "@chakra-ui/react";
+import React, { useRef, useState } from "react";
+import { Box, Button, useToast } from "@chakra-ui/react";
 
 import { createNewList } from "../../Api";
+import Form from "../../Form";
 
-function CreateList({id,addNewList}) {
+function CreateList({ id, addNewList }) {
   const [formVisibility, setFormVisibility] = useState(false);
-  const [inputValue, setInputValue] = useState(""); 
-
   const toast = useToast();
   const toastIdRef = useRef();
 
+  const handleFormVisibility = () => {
+    setFormVisibility((prev) => !prev);
+  };
 
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmitForm = (inputValue) => {
     if (inputValue) {
       createNewList(id, inputValue)
         .then((response) => addNewList([response.data]))
@@ -26,12 +26,7 @@ function CreateList({id,addNewList}) {
             description: `${err.message} :could not ${err.config.method} ${err.config.url}`,
           });
         });
-      setInputValue(""); 
     }
-  };
-
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
   };
 
   return (
@@ -46,36 +41,13 @@ function CreateList({id,addNewList}) {
         Add another list
       </Button>
       {formVisibility && (
-        <form onSubmit={handleSubmit}>
-          <Box display="block">
-            <Input
-              _hover={{
-                border: "1px solid black",
-              }}
-              border="1px solid black"
-              mb="1rem"
-              placeholder="Enter list title"
-              value={inputValue} 
-              onChange={handleInputChange} 
-            />
-            <Flex gap="1rem" mt="1rem">
-              <Button type="submit">Create</Button>
-              <Button
-                id="close"
-                type="button"
-                onClick={() => {
-                  setFormVisibility((prev) => !prev);
-                }}
-              >
-                Cancel
-              </Button>
-            </Flex>
-          </Box>
-        </form>
+        <Form
+          handleSubmitForm={handleSubmitForm}
+          handleFormVisibility={handleFormVisibility}
+        />
       )}
     </Box>
   );
 }
 
 export default CreateList;
-

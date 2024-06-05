@@ -11,9 +11,9 @@ import {
 import Boards from "./components/Boards/Boards.jsx";
 import BoardsDetails from "./components/Lists/BoardsDetails.jsx";
 import App from "./App.jsx";
+import ErrorPage from "./components/ErrorPage.jsx";
 
 import "./index.css";
-import ErrorPage from "./components/ErrorPage.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

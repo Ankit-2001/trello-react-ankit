@@ -9,19 +9,18 @@ import {
 } from "@chakra-ui/react";
 
 import { createNewCard } from "../../Api";
+import Form from "../../Form";
 
 function CreateCard({ id, addNewCard }) {
   const [formVisibility, setFormVisibility] = useState(false);
-  const [inputValue, setInputValue] = useState("");
   const toast = useToast();
   const toastIdRef = useRef();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmitForm = (inputValue) => {
     if (inputValue) {
       createNewCard(id, inputValue)
-        .then((data) => {
-          addNewCard(data);
+        .then((response) => {
+          addNewCard(response.data);
         })
         .catch((err) => {
           toastIdRef.current = toast({
@@ -32,12 +31,11 @@ function CreateCard({ id, addNewCard }) {
             description: `${err.message} :could not ${err.config.method} ${err.config.url}`,
           });
         });
-      setInputValue("");
     }
   };
 
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
+  const handleFormVisibility = () => {
+    setFormVisibility((prev) => !prev);
   };
 
   return (
@@ -48,40 +46,15 @@ function CreateCard({ id, addNewCard }) {
         _hover={{ bg: "blue.300" }}
         display={formVisibility ? "none" : "block"}
         w="full"
-        onClick={() => {
-          setFormVisibility((prev) => !prev);
-        }}
+        onClick={handleFormVisibility}
       >
         Create new card
       </Button>
       {formVisibility && (
-        <form onSubmit={handleSubmit}>
-          <FormControl display="block" p="2">
-            <Input
-              autoFocus
-              _hover={{
-                border: "1px solid black",
-              }}
-              border="1px solid black"
-              mb="1rem"
-              placeholder="Enter card title"
-              value={inputValue}
-              onChange={handleInputChange}
-            />
-            <Flex gap="1rem" mt="1rem">
-              <Button type="submit">Create</Button>
-              <Button
-                id="close"
-                type="button"
-                onClick={() => {
-                  setFormVisibility((prev) => !prev);
-                }}
-              >
-                Cancel
-              </Button>
-            </Flex>
-          </FormControl>
-        </form>
+        <Form
+          handleSubmitForm={handleSubmitForm}
+          handleFormVisibility={handleFormVisibility}
+        />
       )}
     </Box>
   );
