@@ -15,7 +15,6 @@ export default function Form({ handleSubmitForm, handleFormVisibility }) {
   };
 
   return (
-    <>
       <form onSubmit={handleSubmit}>
         <FormControl display="block" p="2">
           <Input
@@ -25,7 +24,7 @@ export default function Form({ handleSubmitForm, handleFormVisibility }) {
             }}
             border="1px solid black"
             mb="1rem"
-            placeholder="Enter card title"
+            placeholder="Enter title"
             value={inputValue}
             onChange={handleInputChange}
           />
@@ -39,6 +38,5 @@ export default function Form({ handleSubmitForm, handleFormVisibility }) {
           </Flex>
         </FormControl>
       </form>
-    </>
   );
 }

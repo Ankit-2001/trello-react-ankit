@@ -35,6 +35,7 @@ function CardDetails({ name, id, deleteCurrentCardData }) {
   const toast = useToast();
   const toastIdRef = useRef();
 
+  //Get all the checklists in a card
   useEffect(() => {
     getChecklists(id)
       .then((response) => {
